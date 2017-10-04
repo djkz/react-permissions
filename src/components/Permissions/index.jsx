@@ -3,65 +3,56 @@ import PropTypes from 'prop-types'
 
 class Permissions extends React.Component {
   state = {
-    result: null,
-    loading: false,
-    loaded: false
+    rules: {}
   }
 
   static childContextTypes = {
-    _data_loader: PropTypes.shape({
-      onSubmit: PropTypes.func.isRequired,
-      loading: PropTypes.bool.isRequired,
-      loaded: PropTypes.bool.isRequired,
-      result: PropTypes.any
+    _permissions: PropTypes.shape({
+      rules: PropTypes.object.isRequired,
+      addRule: PropTypes.func.isRequired
     }).isRequired
   }
 
   getChildContext() {
     return {
-      _data_loader: {
-        onSubmit: (val) => {
-
-          this.setState({loading: true})
-          setTimeout( () => {
-            this.setState({loading: false, loaded: true, result: val });
-          },
-            2000);
-        },
-        loading: this.state.loading,
-        loaded: this.state.loaded,
-        result: this.state.result
+      _permissions: {
+        rules: this.state.rules,
+        addRule: (name, fn) => this.setState((prevState, props) => {
+          let rules = Object.assign({}, prevState.rules) 
+          rules[name] = fn
+          return { rules }
+        })
       }
     }
   }
 
   render() {
-    const { render, component:Component } = this.props
-
-    if (render) {
-      return render( this.state.loading, this.state.result )
-    } else if (Component) {
-      return <Component result={this.state.result}/>
-      } else {
-        return null
-      }
+    return this.props.children
   }
 }
 
 class Permit extends React.Component {
   static contextTypes = {
-    _data_loader: PropTypes.shape({
-      onSubmit: PropTypes.func.isRequired,
-      loading: PropTypes.bool.isRequired
+    _permissions: PropTypes.shape({
+      rules: PropTypes.object.isRequired
     }).isRequired
   }
 
   render() {
-    return this.props.children( this.context._data_loader.onSubmit )
+    return this.props.children
   }
 }
 
 class AddRule extends React.Component {
+  static contextTypes = {
+    _permissions: PropTypes.shape({
+      addRule: PropTypes.func.isRequired
+    }).isRequired
+  }
+
+  componentWillMount(){
+    this.context._permissions.addRule(this.props.name, this.props.condition)
+  }
 
   render(){
     return null;

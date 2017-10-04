@@ -30,13 +30,12 @@ class App extends Component {
             <a onClick={(e) => this.setState({ deal: {status: "created"}})}>Created</a>
             <a onClick={(e) => this.setState({ deal: {status: "paid_out"}})}>Paid Out</a>
             <h2>Deal</h2>
-            <Permit name="canAddBorrower" render={() => (
+            <Permit name="canAddBorrower" vars={this.state}>
               <h3>You can add borrower!</h3>
-            )} />
-            <Permit name="isGuest" render={() => (
+            </Permit>
+            <Permit name="isGuest" vars={this.state}>
               <h3>You are a guest!</h3>
-            )} />
-
+            </Permit>
           </Permissions>
       </div>
     );
