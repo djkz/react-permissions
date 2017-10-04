@@ -29,13 +29,14 @@ class App extends Component {
             <h3>Set Deal Status</h3>
             <a onClick={(e) => this.setState({ deal: {status: "created"}})}>Created</a>
             <a onClick={(e) => this.setState({ deal: {status: "paid_out"}})}>Paid Out</a>
-            <h2>Deal</h2>
+            <h2>User role: {this.state.role} Deal {this.state.deal.status } </h2>
             <Permit name="canAddBorrower" vars={this.state}>
               <h3>You can add borrower!</h3>
             </Permit>
             <Permit name="isGuest" vars={this.state}>
               <h3>You are a guest!</h3>
             </Permit>
+            <Permit name="isTest" vars={this.state} />
           </Permissions>
       </div>
     );

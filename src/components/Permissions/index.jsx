@@ -39,7 +39,11 @@ class Permit extends React.Component {
   }
 
   render() {
-    return this.props.children
+    if ( this.context._permissions.rules[this.props.name] &&
+      this.context._permissions.rules[this.props.name](this.props.vars))
+      return this.props.children
+    else
+      return null
   }
 }
 
